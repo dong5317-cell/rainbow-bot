@@ -23,21 +23,21 @@ client.once("ready", () => {
     let i = 0;
 
     setInterval(async () => {
-        const guild = client.guilds.cache.first();
+        try {
+            const guild = client.guilds.cache.first();
+            const role = guild.roles.cache.get(ROLE_ID);
 
-        if (!guild) return;
+            await role.setColor(colors[i]);
 
-        const role = guild.roles.cache.get(ROLE_ID);
+            console.log("색 변경 완료");
 
-        if (!role) return;
+            i = (i + 1) % colors.length;
 
-        await role.setColor(colors[i]);
+        } catch (err) {
+            console.log("오류:", err.message);
+        }
 
-        console.log("색 변경:", colors[i]);
-
-        i = (i + 1) % colors.length;
-
-    }, 1000);
+    }, 5000);
 });
 
 client.login(TOKEN);
