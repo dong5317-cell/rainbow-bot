@@ -41,7 +41,7 @@ function hslToRgb(h, s, l) {
     return (r << 16) | (g << 8) | b;
 }
 
-client.once("ready", () => {
+client.once("clientReady", () => {
     console.log(`${client.user.tag} 실행됨!`);
 
     const guild = client.guilds.cache.first();
@@ -58,17 +58,12 @@ client.once("ready", () => {
                 await role.setColor(color);
             }
 
-            // 1도씩 이동 = 가장 부드러운 무지개
-            hue += 1;
-
-            if (hue >= 360) hue = 0;
+            hue = (hue + 3) % 360;
 
         } catch (err) {
             console.error(err);
         }
-
-    }, 300);
-
+    }, 500);
 });
 
 client.login(TOKEN);
