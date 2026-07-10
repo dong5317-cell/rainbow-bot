@@ -7,63 +7,78 @@ const client = new Client({
 const TOKEN = process.env.TOKEN;
 const ROLE_ID = process.env.ROLE_ID;
 
-let hue = 0;
+// 무지개 색상 (42단계)
+const colors = [
+    0xff0000,
+    0xff2200,
+    0xff4400,
+    0xff6600,
+    0xff8800,
+    0xffaa00,
+    0xffcc00,
+    0xffee00,
+    0xffff00,
 
-// HSL → RGB
-function hslToRgb(h, s, l) {
-    s /= 100;
-    l /= 100;
+    0xddff00,
+    0xbbff00,
+    0x99ff00,
+    0x77ff00,
+    0x55ff00,
+    0x33ff00,
+    0x00ff00,
 
-    const c = (1 - Math.abs(2 * l - 1)) * s;
-    const x = c * (1 - Math.abs((h / 60) % 2 - 1));
-    const m = l - c / 2;
+    0x00ff33,
+    0x00ff66,
+    0x00ff99,
+    0x00ffcc,
+    0x00ffff,
 
-    let r = 0, g = 0, b = 0;
+    0x00ddff,
+    0x00bbff,
+    0x0099ff,
+    0x0077ff,
+    0x0055ff,
+    0x0033ff,
+    0x0000ff,
 
-    if (h < 60) {
-        r = c; g = x; b = 0;
-    } else if (h < 120) {
-        r = x; g = c; b = 0;
-    } else if (h < 180) {
-        r = 0; g = c; b = x;
-    } else if (h < 240) {
-        r = 0; g = x; b = c;
-    } else if (h < 300) {
-        r = x; g = 0; b = c;
-    } else {
-        r = c; g = 0; b = x;
-    }
+    0x2200ff,
+    0x4400ff,
+    0x6600ff,
+    0x8800ff,
+    0xaa00ff,
+    0xcc00ff,
+    0xee00ff,
+    0xff00ff,
 
-    r = Math.round((r + m) * 255);
-    g = Math.round((g + m) * 255);
-    b = Math.round((b + m) * 255);
-
-    return (r << 16) | (g << 8) | b;
-}
+    0xff00cc,
+    0xff0099,
+    0xff0066,
+    0xff0033,
+    0xff0011,
+    0xff0000
+];
 
 client.once("clientReady", () => {
     console.log(`${client.user.tag} 실행됨!`);
 
-    const guild = client.guilds.cache.first();
-    if (!guild) return;
-
-    const role = guild.roles.cache.get(ROLE_ID);
-    if (!role) return;
+    let i = 0;
 
     setInterval(async () => {
         try {
-            const color = hslToRgb(hue, 100, 50);
+            const guild = client.guilds.cache.first();
+            if (!guild) return;
 
-            if (role.color !== color) {
-                await role.setColor(color);
-            }
+            const role = guild.roles.cache.get(ROLE_ID);
+            if (!role) return;
 
-            hue = (hue + 3) % 360;
+            await role.setColor(colors[i]);
+
+            i = (i + 1) % colors.length;
 
         } catch (err) {
             console.error(err);
         }
-    }, 500);
+    }, 500); // 0.5초마다 변경
 });
 
 client.login(TOKEN);
