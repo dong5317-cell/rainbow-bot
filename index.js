@@ -63,22 +63,25 @@ client.once("clientReady", () => {
 
     let i = 0;
 
-    setInterval(async () => {
-        try {
-            const guild = client.guilds.cache.first();
-            if (!guild) return;
+setInterval(async () => {
+    try {
+        const guild = client.guilds.cache.first();
+        if (!guild) return;
 
-            const role = guild.roles.cache.get(ROLE_ID);
-            if (!role) return;
+        // 매번 최신 역할 정보 가져오기
+        const role = await guild.roles.fetch(ROLE_ID);
+        if (!role) return;
 
-            await role.setColor(colors[i]);
+        console.log(`색 변경: ${i}`);
 
-            i = (i + 1) % colors.length;
+        await role.setColor(colors[i]);
 
-        } catch (err) {
-            console.error(err);
-        }
-    }, 500); // 0.5초마다 변경
+        i = (i + 1) % colors.length;
+
+    } catch (err) {
+        console.error("오류:", err);
+    }
+}, 1000); // 1초마다 변경
 });
 
 client.login(TOKEN);
