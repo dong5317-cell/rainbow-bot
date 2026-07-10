@@ -1,4 +1,4 @@
-onst { Client, GatewayIntentBits } = require("discord.js");
+const { Client, GatewayIntentBits } = require("discord.js");
 
 const client = new Client({
     intents: [GatewayIntentBits.Guilds]
@@ -24,14 +24,27 @@ client.once("ready", () => {
 
     setInterval(async () => {
         const guild = client.guilds.cache.first();
-        const role = guild.roles.cache.get(ROLE_ID);
+        if (!guild) return;
 
+        const role = guild.roles.cache.get(ROLE_ID);
         if (!role) return;
 
-        await role.setColor(colors[i]);
+        try {
+            await role.edit({
+                colors: {
+                    primaryColor: colors[i]
+                }
+            });
 
-        i = (i + 1) % colors.length;
-    }, 500);
+            console.log("색 변경 완료");
+
+            i = (i + 1) % colors.length;
+
+        } catch (error) {
+            console.log(error);
+        }
+
+    }, 3000);
 });
 
 client.login(TOKEN);
