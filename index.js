@@ -56,11 +56,11 @@ client.once("ready", () => {
 
             await role.setColor(color);
 
-            hue = (hue + 8) % 360;
+            hue = (hue + 12) % 360;
         } catch (err) {
             console.error(err);
         }
-    }, 500); // 0.5초마다 변경
+    }, 400); // 0.4초마다 변경
 });
 
 client.login(TOKEN);
