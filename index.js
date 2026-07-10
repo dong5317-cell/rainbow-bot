@@ -20,17 +20,24 @@ const colors = [
 
 client.once("ready", () => {
     console.log(`${client.user.tag} 실행됨`);
+    console.log("역할 ID:", ROLE_ID);
 
     let i = 0;
 
-    setInterval(() => {
+    setInterval(async () => {
+
         const guild = client.guilds.cache.first();
         if (!guild) return;
 
         const role = guild.roles.cache.get(ROLE_ID);
-        if (!role) return;
+        if (!role) {
+            console.log("역할을 못 찾음");
+            return;
+        }
 
-        role.setColor(colors[i]);
+        await role.setColor(colors[i]);
+
+        console.log("색 변경 성공");
 
         i++;
 
