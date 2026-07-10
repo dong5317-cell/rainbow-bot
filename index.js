@@ -9,7 +9,7 @@ const ROLE_ID = process.env.ROLE_ID;
 
 let hue = 0;
 
-// HSL → RGB 변환
+// HSL → RGB
 function hslToRgb(h, s, l) {
     s /= 100;
     l /= 100;
@@ -38,29 +38,37 @@ function hslToRgb(h, s, l) {
     g = Math.round((g + m) * 255);
     b = Math.round((b + m) * 255);
 
-    return (r << 16) + (g << 8) + b;
+    return (r << 16) | (g << 8) | b;
 }
 
 client.once("ready", () => {
     console.log(`${client.user.tag} 실행됨!`);
 
+    const guild = client.guilds.cache.first();
+    if (!guild) return;
+
+    const role = guild.roles.cache.get(ROLE_ID);
+    if (!role) return;
+
     setInterval(async () => {
         try {
-            const guild = client.guilds.cache.first();
-            if (!guild) return;
-
-            const role = guild.roles.cache.get(ROLE_ID);
-            if (!role) return;
-
             const color = hslToRgb(hue, 100, 50);
 
-            await role.setColor(color);
+            if (role.color !== color) {
+                await role.setColor(color);
+            }
 
-            hue = (hue + 12) % 360;
+            // 1도씩 이동 = 가장 부드러운 무지개
+            hue += 1;
+
+            if (hue >= 360) hue = 0;
+
         } catch (err) {
             console.error(err);
         }
-    }, 400); // 0.4초마다 변경
+
+    }, 300);
+
 });
 
 client.login(TOKEN);
