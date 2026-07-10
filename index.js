@@ -4,8 +4,8 @@ const client = new Client({
     intents: [GatewayIntentBits.Guilds]
 });
 
-const TOKEN = process.env.TOKEN; 
-const ROLE_ID = process.env.ROLE_ID;;
+const TOKEN = process.env.TOKEN;
+const ROLE_ID = process.env.ROLE_ID;
 
 const colors = [
     0xff0000,
@@ -24,13 +24,19 @@ client.once("ready", () => {
 
     setInterval(async () => {
         const guild = client.guilds.cache.first();
+
+        if (!guild) return;
+
         const role = guild.roles.cache.get(ROLE_ID);
 
         if (!role) return;
 
         await role.setColor(colors[i]);
 
+        console.log("색 변경:", colors[i]);
+
         i = (i + 1) % colors.length;
+
     }, 1000);
 });
 
