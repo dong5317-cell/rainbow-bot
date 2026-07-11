@@ -25,27 +25,30 @@ client.once("clientReady", () => {
     async function changeColor() {
         try {
             const guild = client.guilds.cache.first();
-            if (!guild) return;
+
+            if (!guild) {
+                console.log("Guild not found");
+                return;
+            }
 
             const role = guild.roles.cache.get(ROLE_ID);
-            if (!role) return;
+
+            if (!role) {
+                console.log("Role not found");
+                return;
+            }
 
             console.log("Trying color:", i);
 
-            await Promise.race([
-                role.setColor(colors[i]),
-                new Promise((_, reject) =>
-                    setTimeout(() => reject(new Error("Color change timeout")), 3000)
-                )
-            ]);
+            await role.setColor(colors[i]);
 
             console.log("Color changed:", i);
 
-            i = (i + 1) % colors.length;
-
-        } catch (err) {
-            console.error("COLOR ERROR:", err.message);
+        } catch (error) {
+            console.error("Color failed:", i, error.message);
         }
+
+        i = (i + 1) % colors.length;
 
         setTimeout(changeColor, 3000);
     }
