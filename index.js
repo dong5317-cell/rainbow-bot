@@ -8,44 +8,54 @@ const TOKEN = process.env.TOKEN;
 const ROLE_ID = process.env.ROLE_ID;
 
 const colors = [
-    "#ff0000",
-    "#ff6600",
-    "#ffff00",
-    "#66ff00",
-    "#00ff00",
-    "#00ffff",
-    "#0066ff",
-    "#0000ff",
-    "#9900ff",
-    "#ff00ff"
+    "#ff5555",
+    "#ff9955",
+    "#ffff55",
+    "#99ff55",
+    "#55ff99",
+    "#55ffff",
+    "#5599ff",
+    "#5555ff",
+    "#9955ff",
+    "#ff55cc"
 ];
 
 client.once("clientReady", () => {
     console.log(`${client.user.tag} is online`);
 
-    let i = 0;
+    let index = 0;
 
     async function changeColor() {
-        const current = i;
+        const currentColor = index;
 
         try {
             const guild = client.guilds.cache.first();
-            if (!guild) return;
+
+            if (!guild) {
+                console.log("Guild not found");
+                setTimeout(changeColor, 5000);
+                return;
+            }
 
             const role = guild.roles.cache.get(ROLE_ID);
-            if (!role) return;
 
-            console.log("Trying color:", current);
+            if (!role) {
+                console.log("Role not found");
+                setTimeout(changeColor, 5000);
+                return;
+            }
 
-            await role.setColor(colors[current]);
+            console.log("Trying color:", currentColor);
 
-            console.log("Color changed:", current);
+            await role.setColor(colors[currentColor]);
+
+            console.log("Color changed:", currentColor);
 
         } catch (error) {
-            console.log("Color skipped:", current, error.message);
+            console.log("Color skipped:", currentColor, error.message);
         }
 
-        i = (current + 1) % colors.length;
+        index = (currentColor + 1) % colors.length;
 
         setTimeout(changeColor, 5000);
     }
