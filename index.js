@@ -9,15 +9,8 @@ const ROLE_ID = process.env.ROLE_ID;
 
 const colors = [
     0xff0000,
-    0xff6600,
-    0xffff00,
-    0x66ff00,
     0x00ff00,
-    0x00ffff,
-    0x0066ff,
-    0x0000ff,
-    0x9900ff,
-    0xff00ff
+    0x0000ff
 ];
 
 client.once("clientReady", () => {
@@ -57,7 +50,7 @@ client.once("clientReady", () => {
 
         index = (currentColor + 1) % colors.length;
 
-        setTimeout(changeColor, 5000);
+       setTimeout(changeColor, 10000);
     }
 
     changeColor();
