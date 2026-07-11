@@ -34,4 +34,4 @@ client.once("ready", () => {
     }, 500);
 });
 
-client.login(TOKEN);s
+client.login(TOKEN);
