@@ -27,7 +27,7 @@ client.once("clientReady", () => {
                 return;
             }
 
-            const role = guild.roles.cache.get(ROLE_ID);
+            const role = await guild.roles.fetch(ROLE_ID);
 
             if (!role) {
                 console.log("Role not found");
@@ -36,14 +36,18 @@ client.once("clientReady", () => {
 
             console.log("Trying color:", index);
 
-            await role.setColor(colors[index]);
+            await role.edit({
+                colors: {
+                    primaryColor: colors[index]
+                }
+            });
 
             console.log("Color changed:", index);
 
             index = (index + 1) % colors.length;
 
         } catch (error) {
-            console.log("Color failed:", index, error.message);
+            console.log("Color failed:", error.message);
             index = (index + 1) % colors.length;
         }
 
