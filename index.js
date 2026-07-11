@@ -13,27 +13,34 @@ const colors = [
     0x0000ff
 ];
 
-client.once("clientReady", () => {
+client.once("clientReady", async () => {
     console.log(`${client.user.tag} is online`);
 
     let index = 0;
 
     async function changeColor() {
         try {
+            console.log("Starting color check");
+
             const guild = client.guilds.cache.first();
 
             if (!guild) {
                 console.log("Guild missing");
+                setTimeout(changeColor, 30000);
                 return;
             }
+
+            console.log("Guild:", guild.name);
 
             const role = await guild.roles.fetch(ROLE_ID);
 
             if (!role) {
                 console.log("Role missing");
+                setTimeout(changeColor, 30000);
                 return;
             }
 
+            console.log("Role:", role.name);
             console.log("Trying color:", index);
 
             await role.setColor(colors[index]);
@@ -44,7 +51,6 @@ client.once("clientReady", () => {
 
         } catch (error) {
             console.log("Color failed:", error.message);
-
             index = (index + 1) % colors.length;
         }
 
