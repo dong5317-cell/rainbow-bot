@@ -8,16 +8,16 @@ const TOKEN = process.env.TOKEN;
 const ROLE_ID = process.env.ROLE_ID;
 
 const colors = [
-    "#ff5555",
-    "#ff9955",
-    "#ffff55",
-    "#99ff55",
-    "#55ff99",
-    "#55ffff",
-    "#5599ff",
-    "#5555ff",
-    "#9999ff",
-    "#ff99cc"
+  "#ff5555",
+"#ff9955",
+"#ffff55",
+"#99ff55",
+"#55ff99",
+"#55ffff",
+"#5599ff",
+"#5555ff",
+"#9999ff",
+"#ff99cc"
 ];
 
 client.once("clientReady", () => {
@@ -47,7 +47,12 @@ client.once("clientReady", () => {
 
             console.log("Trying color:", currentColor);
 
-            await role.setColor(colors[currentColor]);
+            await Promise.race([
+    role.setColor(colors[currentColor]),
+    new Promise((_, reject) =>
+        setTimeout(() => reject(new Error("timeout")), 8000)
+    )
+]);
 
             console.log("Color changed:", currentColor);
 
