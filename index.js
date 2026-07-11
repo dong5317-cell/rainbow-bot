@@ -26,7 +26,7 @@ client.once("clientReady", () => {
 
             if (!guild) {
                 console.log("Guild not found");
-                setTimeout(changeColor, 5000);
+                setTimeout(changeColor, 10000);
                 return;
             }
 
@@ -34,9 +34,16 @@ client.once("clientReady", () => {
 
             if (!role) {
                 console.log("Role not found");
-                setTimeout(changeColor, 5000);
+                setTimeout(changeColor, 10000);
                 return;
             }
+
+            console.log("Target role:", role.name);
+            console.log("Target role position:", role.position);
+            console.log(
+                "Bot highest role position:",
+                guild.members.me.roles.highest.position
+            );
 
             console.log("Trying color:", currentColor);
 
@@ -50,7 +57,7 @@ client.once("clientReady", () => {
 
         index = (currentColor + 1) % colors.length;
 
-       setTimeout(changeColor, 10000);
+        setTimeout(changeColor, 10000);
     }
 
     changeColor();
