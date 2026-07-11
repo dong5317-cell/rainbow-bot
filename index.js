@@ -9,12 +9,15 @@ const ROLE_ID = process.env.ROLE_ID;
 
 const colors = [
     "#ff0000",
-    "#ff7f00",
+    "#ff6600",
     "#ffff00",
+    "#66ff00",
     "#00ff00",
+    "#00ffff",
+    "#0066ff",
     "#0000ff",
-    "#4b0082",
-    "#9400d3"
+    "#9900ff",
+    "#ff00ff"
 ];
 
 client.once("clientReady", () => {
@@ -23,32 +26,18 @@ client.once("clientReady", () => {
     let i = 0;
 
     async function changeColor() {
-
         const current = i;
 
         try {
             const guild = client.guilds.cache.first();
-
-            if (!guild) {
-                console.log("Guild not found");
-                return;
-            }
+            if (!guild) return;
 
             const role = guild.roles.cache.get(ROLE_ID);
-
-            if (!role) {
-                console.log("Role not found");
-                return;
-            }
+            if (!role) return;
 
             console.log("Trying color:", current);
 
-            await Promise.race([
-                role.setColor(colors[current]),
-                new Promise((_, reject) =>
-                    setTimeout(() => reject(new Error("timeout")), 2000)
-                )
-            ]);
+            await role.setColor(colors[current]);
 
             console.log("Color changed:", current);
 
@@ -58,7 +47,7 @@ client.once("clientReady", () => {
 
         i = (current + 1) % colors.length;
 
-        setTimeout(changeColor, 3000);
+        setTimeout(changeColor, 5000);
     }
 
     changeColor();
