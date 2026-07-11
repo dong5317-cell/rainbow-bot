@@ -9,29 +9,58 @@ const ROLE_ID = process.env.ROLE_ID;
 
 const colors = [
     0xff0000,
-    0xff7f00,
+    0xff6600,
     0xffff00,
+    0x66ff00,
     0x00ff00,
+    0x00ffff,
+    0x0066ff,
     0x0000ff,
-    0x4b0082,
-    0x9400d3
+    0x9900ff,
+    0xff00ff
 ];
 
-client.once("ready", () => {
+client.once("clientReady", () => {
     console.log(`${client.user.tag} is online`);
 
-    let i = 0;
+    let index = 0;
 
-    setInterval(async () => {
-        const guild = client.guilds.cache.first();
-        const role = guild.roles.cache.get(ROLE_ID);
+    async function changeColor() {
+        const currentColor = index;
 
-        if (!role) return;
+        try {
+            const guild = client.guilds.cache.first();
 
-        await role.setColor(colors[i]);
+            if (!guild) {
+                console.log("Guild not found");
+                setTimeout(changeColor, 5000);
+                return;
+            }
 
-        i = (i + 1) % colors.length;
-    }, 500);
+            const role = guild.roles.cache.get(ROLE_ID);
+
+            if (!role) {
+                console.log("Role not found");
+                setTimeout(changeColor, 5000);
+                return;
+            }
+
+            console.log("Trying color:", currentColor);
+
+            await role.setColor(colors[currentColor]);
+
+            console.log("Color changed:", currentColor);
+
+        } catch (error) {
+            console.log("Color failed:", currentColor, error.message);
+        }
+
+        index = (currentColor + 1) % colors.length;
+
+        setTimeout(changeColor, 5000);
+    }
+
+    changeColor();
 });
 
 client.login(TOKEN);
