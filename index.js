@@ -19,43 +19,39 @@ client.once("clientReady", () => {
     let index = 0;
 
     async function changeColor() {
-        const currentColor = index;
-
         try {
             const guild = client.guilds.cache.first();
 
             if (!guild) {
                 console.log("Guild not found");
-                setTimeout(changeColor, 10000);
                 return;
             }
 
-            const role = guild.roles.cache.get(ROLE_ID);
+            const role = await guild.roles.fetch(ROLE_ID);
 
             if (!role) {
                 console.log("Role not found");
-                setTimeout(changeColor, 10000);
                 return;
             }
 
             console.log("Target role:", role.name);
-            console.log("Target role position:", role.position);
-            console.log(
-                "Bot highest role position:",
-                guild.members.me.roles.highest.position
-            );
+            console.log("Trying color:", index);
 
-            console.log("Trying color:", currentColor);
+            await role.edit({
+                colors: {
+                    primaryColor: colors[index]
+                }
+            });
 
-            await role.setColor(colors[currentColor]);
+            console.log("Color changed:", index);
 
-            console.log("Color changed:", currentColor);
+            index = (index + 1) % colors.length;
 
         } catch (error) {
-            console.log("Color failed:", currentColor, error.message);
-        }
+            console.log("Color error:", error.message);
 
-        index = (currentColor + 1) % colors.length;
+            index = (index + 1) % colors.length;
+        }
 
         setTimeout(changeColor, 10000);
     }
