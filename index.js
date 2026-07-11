@@ -10,7 +10,12 @@ const TOKEN = process.env.TOKEN;
 const ROLE_ID = process.env.ROLE_ID;
 
 const colors = [
-    0xffff00
+    0xff5555,
+    0xff9955,
+    0x55ff55,
+    0x55ffff,
+    0x5599ff,
+    0x9955ff
 ];
 
 client.once("clientReady", async () => {
