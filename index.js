@@ -1,4 +1,4 @@
-const { Client, GatewayIntentBits } = require("discord.js");
+onst { Client, GatewayIntentBits } = require("discord.js");
 
 const client = new Client({
     intents: [GatewayIntentBits.Guilds]
@@ -8,59 +8,30 @@ const TOKEN = process.env.TOKEN;
 const ROLE_ID = process.env.ROLE_ID;
 
 const colors = [
-    "#ff5555",
-    "#ff9955",
-    "#ffff55",
-    "#99ff55",
-    "#55ff55",
-    "#55ccff",
-    "#5599ff",
-    "#7777ff",
-    "#9999ff",
-    "#ff99cc"
+    0xff0000,
+    0xff7f00,
+    0xffff00,
+    0x00ff00,
+    0x0000ff,
+    0x4b0082,
+    0x9400d3
 ];
 
-client.once("clientReady", () => {
+client.once("ready", () => {
     console.log(`${client.user.tag} is online`);
 
-    let index = 0;
+    let i = 0;
 
-    async function changeColor() {
-        const currentColor = index;
+    setInterval(async () => {
+        const guild = client.guilds.cache.first();
+        const role = guild.roles.cache.get(ROLE_ID);
 
-        try {
-            const guild = client.guilds.cache.first();
+        if (!role) return;
 
-            if (!guild) {
-                console.log("Guild not found");
-                setTimeout(changeColor, 5000);
-                return;
-            }
+        await role.setColor(colors[i]);
 
-            const role = guild.roles.cache.get(ROLE_ID);
-
-            if (!role) {
-                console.log("Role not found");
-                setTimeout(changeColor, 5000);
-                return;
-            }
-
-            console.log("Trying color:", currentColor);
-
-            await role.setColor(colors[currentColor]);
-
-            console.log("Color changed:", currentColor);
-
-        } catch (error) {
-            console.log("Color skipped:", currentColor, error.message);
-        }
-
-        index = (currentColor + 1) % colors.length;
-
-        setTimeout(changeColor, 5000);
-    }
-
-    changeColor();
+        i = (i + 1) % colors.length;
+    }, 500);
 });
 
 client.login(TOKEN);
