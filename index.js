@@ -1,9 +1,7 @@
 const { Client, GatewayIntentBits } = require("discord.js");
 
 const client = new Client({
-    intents: [
-        GatewayIntentBits.Guilds
-    ]
+    intents: [GatewayIntentBits.Guilds]
 });
 
 const TOKEN = process.env.TOKEN;
@@ -12,13 +10,15 @@ const ROLE_ID = process.env.ROLE_ID;
 const colors = [
     0xff5555,
     0xff9955,
+    0xffff55,
     0x55ff55,
     0x55ffff,
     0x5599ff,
-    0x9955ff
+    0x9955ff,
+    0xff55cc
 ];
 
-client.once("clientReady", async () => {
+client.once("clientReady", () => {
 
     console.log(`${client.user.tag} is online`);
 
@@ -30,41 +30,18 @@ client.once("clientReady", async () => {
 
             const guild = client.guilds.cache.first();
 
-            if (!guild) {
-                console.log("Guild not found");
-                setTimeout(changeColor, 30000);
-                return;
-            }
-
             const role = await guild.roles.fetch(ROLE_ID);
 
             if (!role) {
                 console.log("Role not found");
-                setTimeout(changeColor, 30000);
                 return;
             }
 
-
-            console.log("Guild:", guild.name);
-            console.log("Role:", role.name);
-            console.log("Role position:", role.position);
-            console.log(
-                "Bot role position:",
-                guild.members.me.roles.highest.position
-            );
-
-
             console.log("Trying color:", index);
 
-
-            await role.edit({
-                color: colors[index],
-                reason: "Rainbow role color update"
-            });
-
+            await role.setColor(colors[index]);
 
             console.log("Color changed:", index);
-
 
             index = (index + 1) % colors.length;
 
@@ -73,6 +50,7 @@ client.once("clientReady", async () => {
 
             console.log(
                 "Color failed:",
+                index,
                 error.message
             );
 
@@ -81,7 +59,8 @@ client.once("clientReady", async () => {
         }
 
 
-        setTimeout(changeColor, 30000);
+        // Discord API 안정 시간
+        setTimeout(changeColor, 60000);
 
     }
 
@@ -91,4 +70,4 @@ client.once("clientReady", async () => {
 });
 
 
-client.login(TOKEN);
+client.login(TOKEN);client.login(TOKEN);
