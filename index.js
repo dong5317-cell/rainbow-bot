@@ -16,8 +16,8 @@ const colors = [
     "#55ffff",
     "#5599ff",
     "#5555ff",
-    "#9955ff",
-    "#ff55cc"
+    "#9999ff",
+    "#ff99cc"
 ];
 
 client.once("clientReady", () => {
@@ -57,7 +57,7 @@ client.once("clientReady", () => {
 
         index = (currentColor + 1) % colors.length;
 
-        setTimeout(changeColor, 5000);
+       setTimeout(changeColor, 3000);
     }
 
     changeColor();
