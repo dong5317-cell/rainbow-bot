@@ -18,20 +18,39 @@ const colors = [
 ];
 
 client.once("ready", () => {
-    console.log(`${client.user.tag} 실행됨`);
+    console.log(`${client.user.tag} is online`);
 
     let i = 0;
 
     setInterval(async () => {
-        const guild = client.guilds.cache.first();
-        const role = guild.roles.cache.get(ROLE_ID);
+        try {
+            const guild = client.guilds.cache.first();
 
-        if (!role) return;
+            if (!guild) {
+                console.log("No guild");
+                return;
+            }
 
-        await role.setColor(colors[i]);
+            const role = guild.roles.cache.get(ROLE_ID);
 
-        i = (i + 1) % colors.length;
-    }, 500);
+            if (!role) {
+                console.log("Role not found");
+                return;
+            }
+
+            console.log("Trying color:", i);
+
+            await role.setColor(colors[i]);
+
+            console.log("Color changed:", i);
+
+            i = (i + 1) % colors.length;
+
+        } catch (err) {
+            console.error("COLOR ERROR:", err);
+        }
+
+    }, 1000);
 });
 
 client.login(TOKEN);
