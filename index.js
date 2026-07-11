@@ -53,7 +53,7 @@ client.once("clientReady", () => {
             index = (index + 1) % colors.length;
         }
 
-        setTimeout(changeColor, 3000);
+        setTimeout(changeColor, 5000);
     }
 
     changeColor();
