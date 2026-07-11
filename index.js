@@ -19,6 +19,8 @@ client.once("clientReady", () => {
     let index = 0;
 
     async function changeColor() {
+        const current = index;
+
         try {
             const guild = client.guilds.cache.first();
 
@@ -34,24 +36,31 @@ client.once("clientReady", () => {
                 return;
             }
 
-            console.log("Trying color:", index);
+            console.log("Trying color:", current);
 
-            await role.edit({
+            const update = role.edit({
                 colors: {
-                    primaryColor: colors[index]
+                    primaryColor: colors[current]
                 }
             });
 
-            console.log("Color changed:", index);
+            const timeout = new Promise((_, reject) => {
+                setTimeout(() => {
+                    reject(new Error("Discord response timeout"));
+                }, 10000);
+            });
 
-            index = (index + 1) % colors.length;
+            await Promise.race([update, timeout]);
+
+            console.log("Color changed:", current);
 
         } catch (error) {
-            console.log("Color failed:", error.message);
-            index = (index + 1) % colors.length;
+            console.log("Color skipped:", current, error.message);
         }
 
-        setTimeout(changeColor, 10000);
+        index = (current + 1) % colors.length;
+
+        setTimeout(changeColor, 15000);
     }
 
     changeColor();
