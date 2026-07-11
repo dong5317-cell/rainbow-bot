@@ -14,8 +14,7 @@ const colors = [
     0x55ff55,
     0x55ffff,
     0x5599ff,
-    0x9955ff,
-    0xff55cc
+    0x9955ff
 ];
 
 client.once("clientReady", () => {
@@ -26,41 +25,61 @@ client.once("clientReady", () => {
 
     async function changeColor() {
 
+        const current = index;
+
         try {
 
             const guild = client.guilds.cache.first();
 
-            const role = await guild.roles.fetch(ROLE_ID);
-
-            if (!role) {
-                console.log("Role not found");
+            if (!guild) {
+                console.log("Guild not found");
+                setTimeout(changeColor, 30000);
                 return;
             }
 
-            console.log("Trying color:", index);
 
-            await role.setColor(colors[index]);
+            const role = await guild.roles.fetch(ROLE_ID);
 
-            console.log("Color changed:", index);
 
-            index = (index + 1) % colors.length;
+            if (!role) {
+                console.log("Role not found");
+                setTimeout(changeColor, 30000);
+                return;
+            }
+
+
+            console.log("Trying color:", current);
+
+
+            await Promise.race([
+                role.setColor(colors[current]),
+
+                new Promise((_, reject) => {
+                    setTimeout(() => {
+                        reject(new Error("timeout"));
+                    }, 15000);
+                })
+            ]);
+
+
+            console.log("Color changed:", current);
 
 
         } catch (error) {
 
             console.log(
-                "Color failed:",
-                index,
+                "Color skipped:",
+                current,
                 error.message
             );
-
-            index = (index + 1) % colors.length;
 
         }
 
 
-        // Discord API 안정 시간
-        setTimeout(changeColor, 60000);
+        index = (current + 1) % colors.length;
+
+
+        setTimeout(changeColor, 30000);
 
     }
 
@@ -70,4 +89,4 @@ client.once("clientReady", () => {
 });
 
 
-client.login(TOKEN);client.login(TOKEN);
+client.login(TOKEN);client.login(TOKEN);client.login(TOKEN);
