@@ -22,10 +22,15 @@ client.once("clientReady", () => {
         try {
             const guild = client.guilds.cache.first();
 
-            const role = guild.roles.cache.get(ROLE_ID);
+            if (!guild) {
+                console.log("Guild missing");
+                return;
+            }
+
+            const role = await guild.roles.fetch(ROLE_ID);
 
             if (!role) {
-                console.log("Role not found");
+                console.log("Role missing");
                 return;
             }
 
@@ -39,10 +44,11 @@ client.once("clientReady", () => {
 
         } catch (error) {
             console.log("Color failed:", error.message);
+
             index = (index + 1) % colors.length;
         }
 
-        setTimeout(changeColor, 15000);
+        setTimeout(changeColor, 30000);
     }
 
     changeColor();
