@@ -22,21 +22,13 @@ client.once("ready", () => {
 
     let i = 0;
 
-    setInterval(async () => {
+    async function changeColor() {
         try {
             const guild = client.guilds.cache.first();
-
-            if (!guild) {
-                console.log("No guild");
-                return;
-            }
+            if (!guild) return;
 
             const role = guild.roles.cache.get(ROLE_ID);
-
-            if (!role) {
-                console.log("Role not found");
-                return;
-            }
+            if (!role) return;
 
             console.log("Trying color:", i);
 
@@ -50,7 +42,10 @@ client.once("ready", () => {
             console.error("COLOR ERROR:", err);
         }
 
-    }, 1000);
+        setTimeout(changeColor, 3000);
+    }
+
+    changeColor();
 });
 
 client.login(TOKEN);
