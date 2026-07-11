@@ -1,3 +1,22 @@
+const { Client, GatewayIntentBits } = require("discord.js");
+
+const client = new Client({
+    intents: [GatewayIntentBits.Guilds]
+});
+
+const TOKEN = process.env.TOKEN;
+const ROLE_ID = process.env.ROLE_ID;
+
+const colors = [
+    "#ff0000",
+    "#ff7f00",
+    "#ffff00",
+    "#00ff00",
+    "#0000ff",
+    "#4b0082",
+    "#9400d3"
+];
+
 client.once("clientReady", () => {
     console.log(`${client.user.tag} is online`);
 
