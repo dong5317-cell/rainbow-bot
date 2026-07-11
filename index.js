@@ -17,33 +17,21 @@ const colors = [
     0x9400d3
 ];
 
-client.once("clientReady", () => {
+client.once("ready", () => {
     console.log(`${client.user.tag} 실행됨`);
 
     let i = 0;
 
-   setInterval(async () => {
-    try {
+    setInterval(async () => {
         const guild = client.guilds.cache.first();
-        if (!guild) return;
-
         const role = guild.roles.cache.get(ROLE_ID);
 
-        if (!role) {
-            console.log("Role not found");
-            return;
-        }
+        if (!role) return;
 
         await role.setColor(colors[i]);
 
-        console.log("Color changed:", i);
-
         i = (i + 1) % colors.length;
-
-    } catch (err) {
-        console.error("Color change error:", err);
-    }
-}, 500);
+    }, 500);
 });
 
-client.login(TOKEN);
+client.login(TOKEN);s
