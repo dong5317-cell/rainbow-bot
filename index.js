@@ -31,7 +31,7 @@ client.once("ready", () => {
         await role.setColor(colors[i]);
 
         i = (i + 1) % colors.length;
-    }, 1000);
+    }, 500);
 });
 
 client.login(TOKEN);
