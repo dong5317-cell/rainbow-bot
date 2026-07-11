@@ -23,6 +23,9 @@ client.once("clientReady", () => {
     let i = 0;
 
     async function changeColor() {
+
+        const current = i;
+
         try {
             const guild = client.guilds.cache.first();
 
@@ -38,22 +41,22 @@ client.once("clientReady", () => {
                 return;
             }
 
-            console.log("Trying color:", i);
+            console.log("Trying color:", current);
 
             await Promise.race([
-                role.setColor(colors[i]),
+                role.setColor(colors[current]),
                 new Promise((_, reject) =>
                     setTimeout(() => reject(new Error("timeout")), 2000)
                 )
             ]);
 
-            console.log("Color changed:", i);
+            console.log("Color changed:", current);
 
         } catch (error) {
-            console.error("Color failed:", i, error.message);
+            console.log("Color skipped:", current, error.message);
         }
 
-        i = (i + 1) % colors.length;
+        i = (current + 1) % colors.length;
 
         setTimeout(changeColor, 3000);
     }
