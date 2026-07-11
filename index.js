@@ -19,46 +19,28 @@ client.once("clientReady", () => {
     let index = 0;
 
     async function changeColor() {
-        const current = index;
-
         try {
             const guild = client.guilds.cache.first();
 
-            if (!guild) {
-                console.log("Guild not found");
-                return;
-            }
-
-            const role = await guild.roles.fetch(ROLE_ID);
+            const role = guild.roles.cache.get(ROLE_ID);
 
             if (!role) {
                 console.log("Role not found");
                 return;
             }
 
-            console.log("Trying color:", current);
+            console.log("Trying color:", index);
 
-            const update = role.edit({
-                colors: {
-                    primaryColor: colors[current]
-                }
-            });
+            await role.setColor(colors[index]);
 
-            const timeout = new Promise((_, reject) => {
-                setTimeout(() => {
-                    reject(new Error("Discord response timeout"));
-                }, 10000);
-            });
+            console.log("Color changed:", index);
 
-            await Promise.race([update, timeout]);
-
-            console.log("Color changed:", current);
+            index = (index + 1) % colors.length;
 
         } catch (error) {
-            console.log("Color skipped:", current, error.message);
+            console.log("Color failed:", error.message);
+            index = (index + 1) % colors.length;
         }
-
-        index = (current + 1) % colors.length;
 
         setTimeout(changeColor, 15000);
     }
