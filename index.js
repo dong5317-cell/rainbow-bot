@@ -1,5 +1,4 @@
 const { Client, GatewayIntentBits } = require("discord.js");
-const fetch = require("node-fetch");
 
 const client = new Client({
     intents: [GatewayIntentBits.Guilds]
@@ -9,78 +8,105 @@ const TOKEN = process.env.TOKEN;
 const ROLE_ID = process.env.ROLE_ID;
 
 const colors = [
-    0xff0000,
-    0xff7f00,
-    0xffff00,
-    0x00ff00,
-    0x0000ff,
-    0x4b0082,
-    0x9400d3
+    0xff0000, // Red
+    0xff7f00, // Orange
+    0xffff00, // Yellow
+    0x00ff00, // Green
+    0x0000ff, // Blue
+    0x4b0082, // Indigo
+    0x9400d3  // Violet
 ];
 
 client.once("clientReady", () => {
 
     console.log(`${client.user.tag} is online`);
 
+    const guild = client.guilds.cache.first();
+
+    if (!guild) {
+        console.log("Guild not found");
+        return;
+    }
+
+    console.log("Guild:", guild.name);
+
     let index = 0;
 
     async function changeColor() {
 
+        const color = colors[index];
+
+        console.log("--------------------------------");
+        console.log("Trying color:", index);
+
+        const controller = new AbortController();
+
+        const timeout = setTimeout(() => {
+            controller.abort();
+        }, 10000);
+
         try {
-
-            const guild = client.guilds.cache.first();
-
-            if (!guild) {
-                console.log("Guild not found");
-                setTimeout(changeColor, 3000);
-                return;
-            }
-
-            console.log("--------------------------------");
-            console.log("Guild:", guild.name);
-            console.log("Trying color:", index);
-            console.log("Color value:", colors[index]);
 
             const response = await fetch(
                 `https://discord.com/api/v10/guilds/${guild.id}/roles/${ROLE_ID}`,
                 {
                     method: "PATCH",
                     headers: {
-                        "Authorization": `Bot ${TOKEN}`,
+                        Authorization: `Bot ${TOKEN}`,
                         "Content-Type": "application/json"
                     },
                     body: JSON.stringify({
-                        color: colors[index]
-                    })
+                        color: color
+                    }),
+                    signal: controller.signal
                 }
             );
 
-            console.log("HTTP Status:", response.status);
+            clearTimeout(timeout);
 
-            const text = await response.text();
-
-            console.log("Response:", text);
+            console.log("HTTP:", response.status);
 
             if (response.status === 200) {
+
                 console.log("SUCCESS");
-            }
 
-            if (response.status === 429) {
+            } else if (response.status === 429) {
+
+                const data = await response.json();
+
                 console.log("RATE LIMITED");
-            }
 
-            if (response.status === 403) {
-                console.log("MISSING PERMISSIONS");
-            }
+                if (data.retry_after) {
 
-            if (response.status === 404) {
-                console.log("ROLE NOT FOUND");
+                    console.log(
+                        "Retry after:",
+                        data.retry_after,
+                        "seconds"
+                    );
+
+                }
+
+            } else {
+
+                const text = await response.text();
+
+                console.log("FAILED:", text);
+
             }
 
         } catch (err) {
 
-            console.log("REQUEST ERROR");
-            console.log(err);
+            clearTimeout(timeout);
+
+            if (err.name === "AbortError") {
+
+                console.log("TIMEOUT");
+
+            } else {
+
+                console.log("ERROR:", err.message);
+
+            }
 
         }
 
