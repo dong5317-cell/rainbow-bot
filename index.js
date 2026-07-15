@@ -7,7 +7,7 @@ const client = new Client({
 
 const TOKEN = process.env.TOKEN;
 const ROLE_ID = process.env.ROLE_ID;
-const ROLE_ID = process.env.GUILD_ID; 
+const GUILD_ID = process.env.GUILD_ID; 
 
 /const colors = [
     0xff0000, // Red
