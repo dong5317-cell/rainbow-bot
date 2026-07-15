@@ -96,22 +96,23 @@ client.once("clientReady", async () => {
 
                 colorIndex = (colorIndex + 1) % colors.length;
 
-                if (successCount >= 10 && delayIndex > 0)
+                if (successCount >= 10 && delayIndex > 0) {
 
-                    delayIndex--;
+    delayIndex--;
 
-                    successCount = 0;
+    successCount = 0;
 
-                    console.log(
-                        "Delay decreased to",
-                        delays[delayIndex] / 1000,
-                        "seconds"
-                    );
-                }
+    console.log(
+        "Delay decreased to",
+        delays[delayIndex] / 1000,
+        "seconds"
+    );
 
-                await sleep(delays[delayIndex]);
+}
 
-            } else if (response.status === 429) {
+await sleep(delays[delayIndex]);
+
+} else if (response.status === 429) {
 
                 const data = await response.json();
 
