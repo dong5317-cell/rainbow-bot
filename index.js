@@ -1,16 +1,15 @@
-cconst { Client, GatewayIntentBits, Events } = require("discord.js");
+const { Client, GatewayIntentBits, Events } = require("discord.js");
 
 const client = new Client({
     intents: [GatewayIntentBits.Guilds]
 });
 
-// ================= [ 중요: 여기를 직접 수정해주세요 ] =================
-const TOKEN = "여기에_봇_토큰_붙여넣기"; 
-const GUILD_ID = "여기에_서버_ID_붙여넣기"; 
-const ROLE_ID = "여기에_역할_ID_붙여넣기"; 
-// ===================================================================
 
-const colors = [
+const TOKEN = process.env.TOKEN;
+const ROLE_ID = process.env.ROLE_ID;
+const ROLE_ID = process.env.GUILD_ID; 
+
+/const colors = [
     0xff0000, // Red
     0xff7f00, // Orange
     0xffff00, // Yellow
